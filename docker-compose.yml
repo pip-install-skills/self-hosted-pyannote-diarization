@@ -1,24 +1,31 @@
-version: '3.8'
+version: "3.8"
 
 services:
   fastapi:
     build:
       context: .
-      dockerfile: Dockerfile  # Use the Dockerfile in the current directory
-    image: self-hosted-pyannote-diarization:latest  # Custom image name (myapp_fastapi) with tag 'latest'
+      dockerfile: Dockerfile
+    image: self‑hosted-pyannote-diarization:latest
     ports:
-      - "8000:8000"  # Map port 8000 on the host to port 8000 in the container
+      - "8000:8000"
     volumes:
-      - .:/app  # Mount the current directory to /app in the container
+      - .:/app
     environment:
-      - PYTHONUNBUFFERED=1  # You can still add specific variables here if needed
+      - PYTHONUNBUFFERED=1
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
     env_file:
-      - .env  # Reference to your .env file
-    # GPU support: request all available NVIDIA GPUs. This requires Docker Engine + NVIDIA Container Toolkit.
-    # If you prefer, you can set 'count' to a number (e.g., 1) or a specific device id.
-    device_requests:
-      - driver: nvidia
-        count: all
-        capabilities: [gpu]
-    # Alternative older option (depends on Docker version / setup):
-    # runtime: nvidia
+      - .env
+
+    # For Compose / Docker versions that support GPU reservations
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all       # or use a number like 1
+              capabilities: [gpu]
+
+    # Fallback / older approach (if device_requests is unsupported)
+    runtime: nvidia
+      
