@@ -1,0 +1,14 @@
+[project]
+name = "self-hosted-pyannote-diarization"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.117.1",
+    "pyannote-audio==3.1",
+    "python-multipart>=0.0.20",
+    "torch>=2.8.0",
+    "torchaudio>=2.8.0",
+    "uvicorn[standard]>=0.37.0",
+]
